@@ -10,10 +10,15 @@ const Timer = () => {
   });
   const [isRunning, setIsRunning] = useState(false);
   const intervalId = useRef(null)
+  const startRef = useRef(null)
 
   useEffect(() => {
     localStorage.setItem('timer', timer)
   }, [timer])
+
+  useEffect(() => {
+    startRef.current.focus();
+  }, [])
 
 
   const toggleTimer = () => {
@@ -38,7 +43,7 @@ const Timer = () => {
   }
 
   return (
-    <div className="flex justify-center items-center flex-col space-y-2">
+    <div className="flex justify-center items-center flex-col space-y-2 bg-gray-300 rounded-lg p-10">
         <TimerDisplay
             timer={timer}
         />
@@ -47,6 +52,7 @@ const Timer = () => {
             toggleTimer={toggleTimer}
             resetTimer={resetTimer}
             timer={timer}
+            startRef={startRef}
         />
     </div>
   )
