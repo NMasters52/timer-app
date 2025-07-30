@@ -1,25 +1,42 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState, useRef } from 'react'
 
 const App = () => {
 
-  const [count, setCount] = useState(0);
+  const [timer, setTimer] = useState(() => {
+     return Number(localStorage.getItem('timer') || 0)
+  });
+  const [isRunning, setIsRunning] = useState(false);
   const intervalId = useRef(null);
-  const startTimer = () => {
-    intervalId.current = setInterval(() => {
-      setCount((prevCount) => prevCount + 1);
-    }, 1000)
+
+  useEffect(() => {
+    localStorage.setItem('timer', timer)
+  }, [timer])
+
+
+  const toggleTimer = () => {
+    if (isRunning) {
+      //pause the timer
+      clearInterval(intervalId.current);
+      intervalId.current = null;
+    } else {
+      //start the timer
+      intervalId.current = setInterval(() => {
+        setTimer((prevTimer) => prevTimer + 1);
+      }, 1000);
+    }
+    setIsRunning(!isRunning)
   }
 
   return (
     <div>
       <h2>timer app</h2>
-      <p>{count}</p>
+      <p>{timer}</p>
       <button 
-        onClick={() => startTimer()}
+        onClick={toggleTimer}
         className="cursor-pointer"
       >
-        Start
+        {isRunning ? 'Pause' : 'Start'}
       </button>
     </div>
   )
